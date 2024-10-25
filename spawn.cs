@@ -32,6 +32,9 @@ public class Spawn : MonoBehaviour
 
     private AudioSource audioSource;
 
+    // プレハブの生成を管理するフラグ
+    private bool isSpawningEnabled = false;
+
     void Start()
     {
         // 二点間の距離を代入(スピード調整に使う)
@@ -44,55 +47,64 @@ public class Spawn : MonoBehaviour
 
     void Update()
     {
-        time -= Time.deltaTime; // タイマーを減少させる
-        if (time <= 0.0f) // タイマーが0以下になったら
+        // 任意のキー入力で生成のオン/オフを切り替える
+        if (Input.anyKeyDown)
         {
-            time = 1.0f; // タイマーをリセット
-
-            // 前のプレファブが存在するなら削除
-            if (spawnedPrefab != null)
-            {
-                Destroy(spawnedPrefab);
-            }
-
-            number = Random.Range(0, Prefabs.Length); // プレファブ配列からランダムにインデックスを選ぶ
-
-            // 新しいプレファブをstartMarkerの位置に生成
-            spawnedPrefab = Instantiate(Prefabs[number], startMarker.position, Quaternion.identity);
-
-            // 生成されたプレファブの大きさを指定
-            spawnedPrefab.transform.localScale = prefabScale;
-
-            // プレファブの移動に必要な初期化
-            startTime = Time.time;
-            journeyLength = Vector3.Distance(startMarker.position, endMarker.position);
+            isSpawningEnabled = !isSpawningEnabled;
         }
 
-        // プレファブが生成された場合のみ移動
-        if (spawnedPrefab != null)
+        if (isSpawningEnabled)
         {
-            // 生成されてからの経過時間に基づいて移動
-            float distCovered = (Time.time - startTime) * speed;
-            float fractionOfJourney = distCovered / journeyLength;
+            time -= Time.deltaTime; // タイマーを減少させる
+            if (time <= 0.0f) // タイマーが0以下になったら
+            {
+                time = 1.0f; // タイマーをリセット
 
-            // プレファブを移動させる
-            spawnedPrefab.transform.position = Vector3.Lerp(startMarker.position, endMarker.position, fractionOfJourney);
+                // 前のプレファブが存在するなら削除
+                if (spawnedPrefab != null)
+                {
+                    Destroy(spawnedPrefab);
+                }
 
-            // キー入力で色を変更し、対応する音を再生
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                ChangeColor(Color.red);
-                PlaySound(soundR);
+                number = Random.Range(0, Prefabs.Length); // プレファブ配列からランダムにインデックスを選ぶ
+
+                // 新しいプレファブをstartMarkerの位置に生成
+                spawnedPrefab = Instantiate(Prefabs[number], startMarker.position, Quaternion.identity);
+
+                // 生成されたプレファブの大きさを指定
+                spawnedPrefab.transform.localScale = prefabScale;
+
+                // プレファブの移動に必要な初期化
+                startTime = Time.time;
+                journeyLength = Vector3.Distance(startMarker.position, endMarker.position);
             }
-            else if (Input.GetKeyDown(KeyCode.G))
+
+            // プレファブが生成された場合のみ移動
+            if (spawnedPrefab != null)
             {
-                ChangeColor(Color.green);
-                PlaySound(soundG);
-            }
-            else if (Input.GetKeyDown(KeyCode.B))
-            {
-                ChangeColor(Color.blue);
-                PlaySound(soundB);
+                // 生成されてからの経過時間に基づいて移動
+                float distCovered = (Time.time - startTime) * speed;
+                float fractionOfJourney = distCovered / journeyLength;
+
+                // プレファブを移動させる
+                spawnedPrefab.transform.position = Vector3.Lerp(startMarker.position, endMarker.position, fractionOfJourney);
+
+                // キー入力で色を変更し、対応する音を再生
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    ChangeColor(Color.red);
+                    PlaySound(soundR);
+                }
+                else if (Input.GetKeyDown(KeyCode.G))
+                {
+                    ChangeColor(Color.green);
+                    PlaySound(soundG);
+                }
+                else if (Input.GetKeyDown(KeyCode.B))
+                {
+                    ChangeColor(Color.blue);
+                    PlaySound(soundB);
+                }
             }
         }
     }
