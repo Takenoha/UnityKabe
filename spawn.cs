@@ -14,23 +14,32 @@ public class Spawn : MonoBehaviour
     // スピード
     public float speed = 1.0F;
 
-    public float otime = 1.0f;
     // 二点間の距離を入れる
     private float distance_two;
-    
+
     // プレファブが移動するための変数
     private GameObject spawnedPrefab; // 生成されたプレファブの参照
     private float journeyLength;
     private float startTime;
-    
-    //おおきさ　
+
+    // プレファブの大きさを指定するためのパラメータ
     public Vector3 prefabScale = new Vector3(1, 1, 1); // デフォルトサイズ (1, 1, 1)
+
+    // 各キーに対応する音声クリップ
+    public AudioClip soundR;
+    public AudioClip soundG;
+    public AudioClip soundB;
+
+    private AudioSource audioSource;
 
     void Start()
     {
         // 二点間の距離を代入(スピード調整に使う)
         distance_two = Vector3.Distance(startMarker.position, endMarker.position);
-        time = 1.0F; // Startが呼ばれた時、タイマーを1秒に設定
+        time = 1.0f; // Startが呼ばれた時、タイマーを1秒に設定
+
+        // AudioSourceコンポーネントの取得
+        audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -38,7 +47,7 @@ public class Spawn : MonoBehaviour
         time -= Time.deltaTime; // タイマーを減少させる
         if (time <= 0.0f) // タイマーが0以下になったら
         {
-            time = otime; // タイマーをリセット
+            time = 1.0f; // タイマーをリセット
 
             // 前のプレファブが存在するなら削除
             if (spawnedPrefab != null)
@@ -50,7 +59,10 @@ public class Spawn : MonoBehaviour
 
             // 新しいプレファブをstartMarkerの位置に生成
             spawnedPrefab = Instantiate(Prefabs[number], startMarker.position, Quaternion.identity);
+
+            // 生成されたプレファブの大きさを指定
             spawnedPrefab.transform.localScale = prefabScale;
+
             // プレファブの移動に必要な初期化
             startTime = Time.time;
             journeyLength = Vector3.Distance(startMarker.position, endMarker.position);
@@ -65,6 +77,45 @@ public class Spawn : MonoBehaviour
 
             // プレファブを移動させる
             spawnedPrefab.transform.position = Vector3.Lerp(startMarker.position, endMarker.position, fractionOfJourney);
+
+            // キー入力で色を変更し、対応する音を再生
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ChangeColor(Color.red);
+                PlaySound(soundR);
+            }
+            else if (Input.GetKeyDown(KeyCode.G))
+            {
+                ChangeColor(Color.green);
+                PlaySound(soundG);
+            }
+            else if (Input.GetKeyDown(KeyCode.B))
+            {
+                ChangeColor(Color.blue);
+                PlaySound(soundB);
+            }
+        }
+    }
+
+    // プレファブの色を変更するメソッド
+    void ChangeColor(Color color)
+    {
+        if (spawnedPrefab != null)
+        {
+            Renderer renderer = spawnedPrefab.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.color = color;
+            }
+        }
+    }
+
+    // 指定された音声クリップを再生するメソッド
+    void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clip);
         }
     }
 }
