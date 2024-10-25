@@ -1,3 +1,5 @@
+//https://musmus.main.jp/se.html se
+//https://commons.nicovideo.jp/material/nc75438 bgm
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
