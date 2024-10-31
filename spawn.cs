@@ -1,5 +1,3 @@
-//https://musmus.main.jp/se.html se
-//https://commons.nicovideo.jp/material/nc75438 bgm
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +18,7 @@ public class Spawn : MonoBehaviour
     private float distance_two;
 
     // プレファブが移動するための変数
-    private GameObject spawnedPrefab; // 生成されたプレファブの参照
+    public GameObject spawnedPrefab; // 生成されたプレファブの参照
     private float journeyLength;
     private float startTime;
 
@@ -28,14 +26,17 @@ public class Spawn : MonoBehaviour
     public Vector3 prefabScale = new Vector3(1, 1, 1); // デフォルトサイズ (1, 1, 1)
 
     // 各キーに対応する音声クリップ
-    public AudioClip soundR;
-    public AudioClip soundG;
-    public AudioClip soundB;
+    public AudioClip TrueSound;
+    public AudioClip FalseSound;
 
     private AudioSource audioSource;
 
     // プレハブの生成を管理するフラグ
     private bool isSpawningEnabled = false;
+
+    // マテリアルをクラスのフィールドとして定義
+    private Material redmat;
+    private Material greenmat;
 
     void Start()
     {
@@ -45,14 +46,20 @@ public class Spawn : MonoBehaviour
 
         // AudioSourceコンポーネントの取得
         audioSource = gameObject.AddComponent<AudioSource>();
+
+        // マテリアルを読み込み
+        redmat = (Material)Resources.Load("Red");
+        greenmat = (Material)Resources.Load("Green");
     }
 
     void Update()
     {
         // 任意のキー入力で生成のオン/オフを切り替える
-        if (Input.anyKeyDown)
+        if (Input.GetKeyDown(KeyCode.S))
         {
             isSpawningEnabled = !isSpawningEnabled;
+            Destroy(spawnedPrefab);
+            time = 1.0F;
         }
 
         if (isSpawningEnabled)
@@ -60,7 +67,7 @@ public class Spawn : MonoBehaviour
             time -= Time.deltaTime; // タイマーを減少させる
             if (time <= 0.0f) // タイマーが0以下になったら
             {
-                time = 1.0f; // タイマーをリセット
+                time = 4.0f; // タイマーをリセット
 
                 // 前のプレファブが存在するなら削除
                 if (spawnedPrefab != null)
@@ -92,26 +99,38 @@ public class Spawn : MonoBehaviour
                 spawnedPrefab.transform.position = Vector3.Lerp(startMarker.position, endMarker.position, fractionOfJourney);
 
                 // キー入力で色を変更し、対応する音を再生
-                if (Input.GetKeyDown(KeyCode.R))
+                if (Input.GetKeyDown(KeyCode.F))
                 {
-                    ChangeColor(Color.red);
-                    PlaySound(soundR);
+                    //ChangeMaterial(redmat);
+                    PlaySound(FalseSound);
                 }
-                else if (Input.GetKeyDown(KeyCode.G))
+                else if (Input.GetKeyDown(KeyCode.T))
                 {
-                    ChangeColor(Color.green);
-                    PlaySound(soundG);
-                }
-                else if (Input.GetKeyDown(KeyCode.B))
-                {
-                    ChangeColor(Color.blue);
-                    PlaySound(soundB);
+                    //ChangeMaterial(greenmat);
+                    PlaySound(TrueSound);
                 }
             }
         }
     }
 
-    // プレファブの色を変更するメソッド
+    // プレファブのマテリアルを変更するメソッド
+    void ChangeMaterial(Material newMaterial)
+    {
+        if (spawnedPrefab != null)
+        {
+            Renderer renderer = spawnedPrefab.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material = newMaterial;
+            }
+            else
+            {
+                Debug.LogWarning("Renderer component is missing on " + spawnedPrefab.name);
+            }
+        }
+    }
+
+    // プレファブの色を変更するメソッド（現在は使用されていません）
     void ChangeColor(Color color)
     {
         if (spawnedPrefab != null)
