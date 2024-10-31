@@ -15,17 +15,16 @@ public class ScoreManager : MonoBehaviour
     {
         // 衝突カウントを増やす
         AddScore();
-
-        // コンソールに現在のカウントを表示
-        Debug.Log("Collision Count: " + collisionCount);
     }
     void Update()
     {
         
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && startFlag = True )
         {
             score = 0;
             UpdateScoreText(); // スコア表示を更新
+            startFlag = False;
+            DelUpdateScoreText();
         }
         UpdateScoreText();
     }
@@ -41,5 +40,10 @@ public class ScoreManager : MonoBehaviour
     private void UpdateScoreText()
     {
         scoreText.text = "Score: " + score; // テキストを更新
+    }
+
+    private void DelUpdateScoreText()
+    {
+        scoreText.text = " " ; // テキストを更新
     }
 }

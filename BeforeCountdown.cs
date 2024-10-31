@@ -6,13 +6,21 @@ public class BeforeCountdown : MonoBehaviour
 {
     public Text countdownText; // UI Text コンポーネントをアタッチするための変数
     public int countdownTime = 3; // カウントダウン時間（秒）
-
+    public static class GlobalVariables
+    {
+        public static bool startFlag = False;
+    }
     private void Start()
     {
-        // カウントダウンを開始
-        StartCoroutine(StartCountdown());
+        
     }
-
+    void Update()
+    {
+        if (startFlag == True)
+        {
+            StartCoroutine(StartCountdown());
+        }
+    }
     private IEnumerator StartCountdown()
     {
         // カウントダウンのループ
@@ -34,9 +42,7 @@ public class BeforeCountdown : MonoBehaviour
         // 1秒待ってからテキストを非表示にする
         yield return new WaitForSeconds(1f);
         countdownText.gameObject.SetActive(false);
-
-        // ゲームの開始処理などを呼び出す
-        StartGame();
+        startFlag = True;
     }
 
     private void StartGame()

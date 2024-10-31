@@ -6,15 +6,15 @@ using UnityEngine.UI;
 public class CountDownTimer : MonoBehaviour
 {
 
-    //@ƒg[ƒ^ƒ‹§ŒÀŠÔ
+    //ï¿½@ï¿½gï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private float totalTime;
-    //@§ŒÀŠÔi•ªj
+    //ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôiï¿½ï¿½ï¿½j
     [SerializeField]
     private int minute;
-    //@§ŒÀŠÔi•bj
+    //ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôiï¿½bï¿½j
     [SerializeField]
     private float seconds;
-    //@‘O‰ñUpdate‚Ì•b”
+    //ï¿½@ï¿½Oï¿½ï¿½Updateï¿½ï¿½ï¿½Ì•bï¿½ï¿½
     private float oldSeconds;
     private Text timerText;
 
@@ -27,29 +27,37 @@ public class CountDownTimer : MonoBehaviour
 
     void Update()
     {
-        //@§ŒÀŠÔ‚ª0•bˆÈ‰º‚È‚ç‰½‚à‚µ‚È‚¢
-        if (totalTime <= 0f)
+        if (startFlag == True)
         {
-            return;
-        }
-        //@ˆê’Uƒg[ƒ^ƒ‹‚Ì§ŒÀŠÔ‚ğŒv‘ªG
-        totalTime = minute * 60 + seconds;
-        totalTime -= Time.deltaTime;
+            //ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½0ï¿½bï¿½È‰ï¿½ï¿½È‚ç‰½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
+            if (totalTime <= 0f)
+            {
+                return;
+            }
+            //ï¿½@ï¿½ï¿½Uï¿½gï¿½[ï¿½^ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½vï¿½ï¿½ï¿½G
+            totalTime = minute * 60 + seconds;
+            totalTime -= Time.deltaTime;
 
-        //@Äİ’è
-        minute = (int)totalTime / 60;
-        seconds = totalTime - minute * 60;
+            //ï¿½@ï¿½Äİ’ï¿½
+            minute = (int)totalTime / 60;
+            seconds = totalTime - minute * 60;
 
-        //@ƒ^ƒCƒ}[•\¦—pUIƒeƒLƒXƒg‚ÉŠÔ‚ğ•\¦‚·‚é
-        if ((int)seconds != (int)oldSeconds)
-        {
-            timerText.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00");
+            //ï¿½@ï¿½^ï¿½Cï¿½}ï¿½[ï¿½\ï¿½ï¿½ï¿½pUIï¿½eï¿½Lï¿½Xï¿½gï¿½Éï¿½ï¿½Ô‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            if ((int)seconds != (int)oldSeconds)
+            {
+                timerText.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00");
+            }
+            oldSeconds = seconds;
+            //ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÔˆÈ‰ï¿½ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½\ï¿½[ï¿½ï¿½ï¿½Éwï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÔIï¿½ï¿½ï¿½xï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            if (totalTime <= 0f)
+            {
+                Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÔIï¿½ï¿½");
+            }
         }
-        oldSeconds = seconds;
-        //@§ŒÀŠÔˆÈ‰º‚É‚È‚Á‚½‚çƒRƒ“ƒ\[ƒ‹‚Éw§ŒÀŠÔI—¹x‚Æ‚¢‚¤•¶š—ñ‚ğ•\¦‚·‚é
-        if (totalTime <= 0f)
+        else
         {
-            Debug.Log("§ŒÀŠÔI—¹");
+            timerText.text = " ";
         }
+        
     }
 }
