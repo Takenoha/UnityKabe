@@ -11,19 +11,23 @@ public class ScoreManager : MonoBehaviour
         score = 0; // スコアを初期化
         UpdateScoreText(); // スコア表示を更新
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        // 衝突カウントを増やす
+        AddScore();
 
+        // コンソールに現在のカウントを表示
+        Debug.Log("Collision Count: " + collisionCount);
+    }
     void Update()
     {
-        // スペースキーが押されたときにスコアを加算
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            AddScore();
-        }
+        
         if (Input.GetKeyDown(KeyCode.R))
         {
             score = 0;
             UpdateScoreText(); // スコア表示を更新
         }
+        UpdateScoreText();
     }
 
     // スコアを加算するメソッド

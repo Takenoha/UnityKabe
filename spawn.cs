@@ -42,7 +42,7 @@ public class Spawn : MonoBehaviour
     {
         // 二点間の距離を代入(スピード調整に使う)
         distance_two = Vector3.Distance(startMarker.position, endMarker.position);
-        time = 1.0f; // Startが呼ばれた時、タイマーを1秒に設定
+        time = 100.0f; // Startが呼ばれた時、タイマーを1秒に設定
 
         // AudioSourceコンポーネントの取得
         audioSource = gameObject.AddComponent<AudioSource>();
@@ -59,7 +59,7 @@ public class Spawn : MonoBehaviour
         {
             isSpawningEnabled = !isSpawningEnabled;
             Destroy(spawnedPrefab);
-            time = 1.0F;
+            time = 3.0F;
         }
 
         if (isSpawningEnabled)
